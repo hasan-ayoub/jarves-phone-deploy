@@ -1,0 +1,24 @@
+# Local: MySQL version. (For phone/cloud use the single-container SQLite setup, see README.)
+services:
+  db:
+    image: mysql:5.7
+    environment: { MYSQL_ROOT_PASSWORD: root, MYSQL_DATABASE: jarves }
+    volumes: [ "dbdata:/var/lib/mysql" ]
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      interval: 5s
+      retries: 20
+  web:
+    build: .
+    depends_on: { db: { condition: service_healthy } }
+    ports: [ "8080:80" ]
+    environment:
+      DB_TYPE: mysql
+      DB_HOST: db
+      DB_NAME: jarves
+      DB_USER: root
+      DB_PASSWORD: root
+    volumes: [ "appdata:/var/www/app/data" ]
+volumes:
+  dbdata:
+  appdata:

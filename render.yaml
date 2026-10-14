@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: jarves
+    runtime: docker
+    plan: starter
+    healthCheckPath: /
+    envVars:
+      - key: DB_TYPE
+        value: sqlite
+    disk:
+      name: jarves-data
+      mountPath: /var/www/app/data
+      sizeGB: 1
